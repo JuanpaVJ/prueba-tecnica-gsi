@@ -1,9 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from db.connection import db
 from models.tasks_model import Task
-from services.tasks_services import get_all_tasks, new_task, get_task_by_id, delete_task, update_task
+from services.tasks_services import get_all_tasks, new_task, get_task_by_id, delete_task, update_task, create_demo_tasks
+from typing import List
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
+
+@router.post("/create_demo_tasks")
+async def bulk_insert(tasks: List[Task]):
+    return await create_demo_tasks(tasks)
 
 @router.get("/")
 async def get_tasks():
@@ -26,12 +31,12 @@ async def get_task(task_id: str):
 async def remove_task(task_id: str):
     deleted = await delete_task(task_id)
     if deleted:
-        return {"msg": "Task deleted"}
+        return {"detail": "Task deleted"}
     raise HTTPException(status_code = 404, detail="Task not found")
 
 @router.put("/{task_id}")
 async def edit_task(task_id: str, task: Task):
     updated = await update_task(task_id, task.dict(exclude_unset=True))
     if updated:
-        return {"msg": "Task updated"}
-    raise HTTPException(status_code=404, detail="Task not found")
+        return {"detail": "Task updated"}
+    raise HTTPException(status_code=404, detail="Task not found or no changes where made.")

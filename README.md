@@ -20,6 +20,15 @@ cd prueba-tecnica-gsi
 **MONGO_URL=mongodb://db:27017**
 **DATABASE_NAME=task_manager**
 
-# Los cambios se guardan en tiempo real
+3. docker-compose up --build o docker compose up --build (depende del os)
 
-3. docker-compose up --build
+4. Las rutas de postman son las siguientes:
+
+Para crear un listado de tasks esta la api de **create_demo_tasks** que acepta un listado de tasks: http://localhost:8000/tasks/create_demo_tasks
+
+- Ver todas las tasks: http://localhost:8000/tasks **GET**
+- Ver task especifica (por id): http://localhost:8000/tasks/{task_id} **GET**
+- Crear nueva task: http://localhost:8000/tasks **POST**
+    - Requiere de los siguientes campos: title, description, status, priority
+- Eliminar una task: http://localhost:8000/tasks/{task_id} **DELETE**
+- Editar task: http://localhost:8000/tasks/{task_id} **PUT**. En esta se puede mandar solo 1 campo a elección.
