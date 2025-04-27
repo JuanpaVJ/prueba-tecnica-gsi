@@ -36,7 +36,16 @@ async def remove_task(task_id: str):
 
 @router.put("/{task_id}")
 async def edit_task(task_id: str, task: Task):
+    allowed_status = ['pending', 'in_progress', 'completed']
+    
+    if 'status' in task.dict(exclude_unset=True):
+        status_value = task.status.strip().lower() 
+        if status_value not in allowed_status:
+            raise HTTPException(status_code=400, detail="Invalid status value. Allowed values are: 'pending', 'in_progress', 'completed'")
+
     updated = await update_task(task_id, task.dict(exclude_unset=True))
+    
     if updated:
         return {"detail": "Task updated"}
-    raise HTTPException(status_code=404, detail="Task not found or no changes where made.")
+    
+    raise HTTPException(status_code=404, detail="Task not found or no changes were made.")

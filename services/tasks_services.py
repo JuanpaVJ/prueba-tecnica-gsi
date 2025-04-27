@@ -42,17 +42,9 @@ async def delete_task(id: str):
 
 async def update_task(task_id: str, task_data: dict):
 
-    allowed_status = ['pending', 'in_progress', 'completed']
-
-    if 'status' in task_data:
-        status_value = task_data['status'].strip().lower()
-        if status_value not in allowed_status:
-            return {"error": "Invalud status value. Allowed valures are: 'pending', 'in progress', 'completed' "}
-        
-        task_data['status'] = status_value
-
     result = tasks_collection.update_one(
         {"_id": ObjectId(task_id)},
         {"$set": task_data}
     )
+    
     return result.modified_count > 0
